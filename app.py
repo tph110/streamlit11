@@ -308,6 +308,10 @@ def main():
 
                 risk_html, risk_level = create_risk_indicator(top_class)
                 st.markdown(risk_html, unsafe_allow_html=True)
+                # ✅ Add urgent banner for High/Critical
+                if risk_level in ['High', 'Critical']:
+                    st.warning("🚨 **Seek urgent Dermatology opinion**", icon="⚠️")
+                
                 st.markdown("---")
                 st.markdown(f"### **Predicted Diagnosis:**\n## {CLASS_INFO[top_class]['full_name']}")
                 st.markdown(f"**Confidence:** <span style='font-size: 1.2em; color: #00FF7F;'>{probs[top_idx]*100:.1f}%</span>", unsafe_allow_html=True)
