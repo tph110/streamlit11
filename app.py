@@ -194,8 +194,8 @@ def create_probability_chart(probabilities, class_names):
         xaxis=dict(range=[0, 105])
     )
     return fig
-
-def create_risk_indicator(top_class: str):
+    
+    def create_risk_indicator(top_class: str):
     risk = CLASS_INFO[top_class]['risk']
     risk_colors = {
         'Low': '#4CAF50', 
@@ -204,15 +204,9 @@ def create_risk_indicator(top_class: str):
         'Critical': '#F44336'
     }
     color = risk_colors.get(risk, '#808080')
-    
-    # ✅ Add urgent message for High/Critical
-    urgent_message = ""
-    if risk in ['High', 'Critical']:
-    
     html = f"""
     <div style="padding: 20px; border-radius: 10px; background-color: {color}; color: white; text-align: center; margin-bottom: 20px;">
         <h2 style="margin: 0; color: white !important;">Risk Level: {risk}</h2>
-        {urgent_message}
     </div>
     """
     return html, risk
