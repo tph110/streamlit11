@@ -343,7 +343,7 @@ def main():
                 st.markdown(risk_html, unsafe_allow_html=True)
                 # ✅ Add urgent banner for High/Critical
                 if risk_level in ['High', 'Critical']:
-                    st.warning("🚨 **Seek urgent Dermatology opinion** — schedule within 48 hours (Critical) or 1 week (High)", icon="⚠️")
+                    st.warning("🚨 **Seek urgent Dermatology opinion** ", icon="⚠️")
                 
                 st.markdown("---")
                 st.markdown(f"### **Predicted Diagnosis:**\n## {CLASS_INFO[top_class]['full_name']}")
