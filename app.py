@@ -239,7 +239,7 @@ def main():
         st.header("⚙️ Settings")
         use_tta = st.checkbox("Use Test-Time Augmentation", value=True)
         show_all_probabilities = st.checkbox("Show detailed probability chart", value=True)
-        show_gradcam = st.checkbox("Show AI Attention (Grad-CAM)", value=False)
+        show_gradcam = st.checkbox("Show AI Attention (Grad-CAM)", value=True)
         st.divider()
         st.header("📊 Model Performance (ISIC2019)")
         st.metric("Macro F1 Score", "0.845")
