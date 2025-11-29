@@ -3,7 +3,10 @@ Skin Lesion Classification App
 8-Class Dermoscopic Image Classifier using ISIC2019-trained EfficientNet-B4
 """
 
-# 🔑 Critical: All imports (except streamlit) come first — NO st.* before set_page_config!
+# ✅ STREAMLIT MUST BE IMPORTED FIRST
+import streamlit as st
+
+# Then all other imports
 import torch
 import torch.nn.functional as F
 from torchvision import transforms
@@ -13,7 +16,7 @@ import requests
 from io import BytesIO
 import numpy as np
 import plotly.graph_objects as go
-import cv2  # For Grad-CAM Lite — headless-safe
+import cv2
 
 # -------------------------
 # Configuration
