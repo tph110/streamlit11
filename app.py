@@ -265,6 +265,8 @@ def main():
     with st.sidebar:
         st.header("ℹ️ Information")
         st.markdown("This AI model classifies medical dermoscopic images of skin lesions into **8 categories**.")
+        st.warning("⚠️ **Medical Disclaimer**\n\nThis tool is for educational and research purposes only. It is **NOT** a substitute for professional medical advice, diagnosis, or treatment. Always consult a qualified dermatologist.")
+        st.divider()
         st.header("⚙️ Settings")
         use_tta = st.checkbox("Use Test-Time Augmentation", value=True)
         show_all_probabilities = st.checkbox("Show detailed probability chart", value=True)
@@ -274,8 +276,7 @@ def main():
         st.metric("Macro F1 Score", "0.845")
         st.metric("Macro AUC", "0.984")
         st.metric("Balanced Accuracy", "0.836")
-        st.divider()
-        st.warning("⚠️ **Medical Disclaimer**\n\nThis tool is for educational and research purposes only. It is **NOT** a substitute for professional medical advice, diagnosis, or treatment. Always consult a qualified dermatologist.")
+        
 
     model = load_model()
     if model is None:
