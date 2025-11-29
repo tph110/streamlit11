@@ -1,3 +1,4 @@
+# Core (keep your versions — they're solid!)
 streamlit==1.28.0
 torch==2.7.0
 torchvision==0.22.0
@@ -7,4 +8,21 @@ numpy==1.26.4
 requests>=2.31.0
 scipy>=1.11.0
 plotly>=5.0.0
-torchcam==0.5.2
+
+# 🔹 Critical additions for your app (missing but used or highly recommended)
+imghdr==0  # Built-in module, but pinning signals intent (no install needed, but good for docs)
+# ↑ Use `imghdr` for secure image validation (see below)
+
+# 🔹 For Grad-CAM (if you add explainability)
+torchcam==0.5.2  # Lightweight, timm-compatible, no extra deps
+# Alternative: captum (more powerful but heavier)
+
+# 🔹 For Docker & production
+gunicorn==23.0.0  # Needed if deploying Streamlit via reverse proxy (e.g., nginx)
+# (Not required for local `streamlit run`, but essential for scalable cloud deployment)
+
+# 🔹 Optional but highly recommended for safety
+opencv-python-headless==4.10.0.84  # For robust image loading/validation (faster than PIL for large batches)
+
+# 🔹 If you add calibration / metrics
+scikit-learn==1.5.2  # You use sklearn.metrics in training — pin it!
