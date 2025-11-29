@@ -195,7 +195,7 @@ def create_probability_chart(probabilities, class_names):
     )
     return fig
     
-    def create_risk_indicator(top_class: str):
+def create_risk_indicator(top_class: str):
     risk = CLASS_INFO[top_class]['risk']
     risk_colors = {
         'Low': '#4CAF50', 
