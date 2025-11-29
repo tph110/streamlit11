@@ -210,7 +210,7 @@ def create_risk_indicator(top_class: str):
     if risk in ['High', 'Critical']:
         urgent_message = """
         <div style="margin-top: 12px; font-weight: bold; font-size: 1.1em;">
-            ⚠️ Seek urgent Dermatology opinion
+            High risk of malignancy detected
         </div>
         """
     
