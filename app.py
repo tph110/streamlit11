@@ -195,13 +195,32 @@ def create_probability_chart(probabilities, class_names):
     )
     return fig
 
-def create_risk_indicator(top_class):
+def create_risk_indicator(top_class: str):
     risk = CLASS_INFO[top_class]['risk']
-    color = {'Low': '#4CAF50', 'Medium': '#FFC107', 'High': '#FF5722', 'Critical': '#F44336'}.get(risk, '#808080')
-    return f"""
+    risk_colors = {
+        'Low': '#4CAF50', 
+        'Medium': '#FFC107',
+        'High': '#FF5722',
+        'Critical': '#F44336'
+    }
+    color = risk_colors.get(risk, '#808080')
+    
+    # ✅ Add urgent message for High/Critical
+    urgent_message = ""
+    if risk in ['High', 'Critical']:
+        urgent_message = """
+        <div style="margin-top: 12px; font-weight: bold; font-size: 1.1em;">
+            ⚠️ Seek urgent Dermatology opinion
+        </div>
+        """
+    
+    html = f"""
     <div style="padding: 20px; border-radius: 10px; background-color: {color}; color: white; text-align: center; margin-bottom: 20px;">
         <h2 style="margin: 0; color: white !important;">Risk Level: {risk}</h2>
-    </div>""", risk
+        {urgent_message}
+    </div>
+    """
+    return html, risk
 
 # -------------------------
 # Streamlit UI (✅ st.set_page_config is FIRST!)
