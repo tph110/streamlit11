@@ -208,11 +208,6 @@ def create_risk_indicator(top_class: str):
     # ✅ Add urgent message for High/Critical
     urgent_message = ""
     if risk in ['High', 'Critical']:
-        urgent_message = """
-        <div style="margin-top: 12px; font-weight: bold; font-size: 1.1em;">
-            High risk of malignancy detected
-        </div>
-        """
     
     html = f"""
     <div style="padding: 20px; border-radius: 10px; background-color: {color}; color: white; text-align: center; margin-bottom: 20px;">
