@@ -264,13 +264,14 @@ def main():
 
     with st.sidebar:
         st.header("ℹ️ Information")
-        st.markdown("This AI model classifies medical dermoscopic images of skin lesions into **8 categories**.")
-        st.warning("⚠️ **Medical Disclaimer**\n\nThis tool is for educational and research purposes only. It is **NOT** a substitute for professional medical advice, diagnosis, or treatment. Always consult a qualified dermatologist.")
+        st.markdown("Skin Scanner classifies medical dermoscopic images of skin lesions into **8 categories**.")
+        st.divider()
+        st.warning("⚠️ **Medical Disclaimer**\n\nThis tool is for educational and research purposes only. It is not a substitute for professional medical advice, diagnosis, or treatment. Always consult a qualified healthcare professional.")
         st.divider()
         st.header("⚙️ Settings")
         use_tta = st.checkbox("Use Test-Time Augmentation", value=True)
         show_all_probabilities = st.checkbox("Show detailed probability chart", value=True)
-        show_gradcam = st.checkbox("Show AI Attention (Grad-CAM)", value=True)
+        show_gradcam = st.checkbox("Show AI Heatmap (Grad-CAM)", value=True)
         st.divider()
         st.header("📊 Model Performance (ISIC2019)")
         st.metric("Macro F1 Score", "0.845")
