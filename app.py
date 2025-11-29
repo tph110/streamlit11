@@ -17,6 +17,7 @@ from io import BytesIO
 import numpy as np
 import plotly.graph_objects as go
 import cv2
+import base64  # Added for heatmap animation
 
 # -------------------------
 # Configuration
@@ -40,7 +41,7 @@ CLASS_INFO = {
 }
 
 # -------------------------
-# Custom CSS (with Grad-CAM animation)
+# Custom CSS (with Professional Heatmap Reveal Animation)
 # -------------------------
 def set_theme(background_color='#0E1117'):
     css = f"""
@@ -51,15 +52,38 @@ def set_theme(background_color='#0E1117'):
     [data-testid="stSidebar"] {{ background-color: rgba(30, 30, 30, 0.95); color: #F0F2F6; }}
     hr {{ border-top: 1px solid #333; }}
 
-    /* Grad-CAM smooth fade-in */
+    /* Professional Heatmap Reveal Animation */
     .gradcam-container {{
-        opacity: 0;
-        animation: fadeInGradCAM 0.8s ease-in forwards;
+        position: relative;
         margin-top: 1.5rem;
     }}
-    @keyframes fadeInGradCAM {{
-        from {{ opacity: 0; transform: translateY(10px); }}
-        to {{ opacity: 1; transform: translateY(0); }}
+    .gradcam-overlay {{
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        pointer-events: none;
+    }}
+    .gradcam-reveal {{
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(90deg, 
+            transparent 0%, 
+            rgba(255, 255, 255, 0.15) 50%, 
+            transparent 100%);
+        animation: gradcamReveal 2.2s ease-in-out 0.8s forwards;
+    }}
+    @keyframes gradcamReveal {{
+        0% {{ transform: translateX(-100%); }}
+        100% {{ transform: translateX(100%); }}
+    }}
+    .gradcam-caption {{
+        text-align: center;
+        margin-top: 10px;
+        font-size: 0.95em;
+        color: #aaa;
+        font-style: italic;
     }}
     </style>
     """
@@ -214,8 +238,6 @@ def create_risk_indicator(top_class: str):
 # -------------------------
 # Streamlit UI (✅ st.set_page_config is FIRST!)
 # -------------------------
-import streamlit as st  # ← Import Streamlit LAST to ensure no st.* before config
-
 def main():
     st.set_page_config(
         page_title="Skin Scanner AI Tool",
@@ -274,18 +296,34 @@ def main():
                 st.image(image, use_container_width=True)
                 st.caption(f"Image size: {image.size[0]} x {image.size[1]} pixels")
 
-                # ✅ Grad-CAM: Only if enabled (and after image is loaded)
+                # ✅ Professional Heatmap Reveal Animation
                 if show_gradcam:
-                    st.markdown('<div class="gradcam-container">', unsafe_allow_html=True)
                     with st.spinner("Generating AI attention map..."):
                         tensor = preprocess_image(image)
                         top_idx = np.argmax(predict_with_tta(model, tensor, use_tta=False))
                         gradcam_img = generate_gradcam_lite(model, tensor, top_idx)
-                        if gradcam_img:
-                            st.image(gradcam_img, caption="AI Image Heatmap", use_container_width=True)
-                        else:
-                            st.info("AI attention map unavailable for this image.")
-                    st.markdown('</div>', unsafe_allow_html=True)
+                    
+                    if gradcam_img:
+                        # Convert image to base64 for overlay
+                        buffered = BytesIO()
+                        gradcam_img.save(buffered, format="PNG")
+                        img_str = base64.b64encode(buffered.getvalue()).decode()
+                        
+                        st.markdown(f"""
+                        <div class="gradcam-container">
+                            <img src="data:image/png;base64,{img_str}" 
+                                 style="width:100%; height:auto; display:block; border-radius: 8px;"
+                                 alt="Dermoscopic image with AI heatmap">
+                            <div class="gradcam-overlay">
+                                <div class="gradcam-reveal"></div>
+                            </div>
+                            <div class="gradcam-caption">
+                                AI focus: Regions most influential for diagnosis
+                            </div>
+                        </div>
+                        """, unsafe_allow_html=True)
+                    else:
+                        st.info("AI attention map unavailable for this image.")
 
             with col2:
                 st.subheader("Classification Results")
@@ -299,7 +337,7 @@ def main():
                 st.markdown(risk_html, unsafe_allow_html=True)
                 # ✅ Add urgent banner for High/Critical
                 if risk_level in ['High', 'Critical']:
-                    st.warning("🚨 **Seek urgent Dermatology opinion**", icon="⚠️")
+                    st.warning("🚨 **Seek urgent Dermatology opinion** — schedule within 48 hours (Critical) or 1 week (High)", icon="⚠️")
                 
                 st.markdown("---")
                 st.markdown(f"### **Predicted Diagnosis:**\n## {CLASS_INFO[top_class]['full_name']}")
@@ -314,11 +352,11 @@ def main():
 
             st.subheader("🩺 Clinical Recommendations")
             if risk_level in ['Critical', 'High']:
-                st.error(f"**⚠️ URGENT: This lesion shows characteristics of {CLASS_INFO[top_class]['full_name']}**\n\n**Recommended Actions:**\n- Schedule an appointment with a **dermatologist immediately**\n- Do not delay - early detection is crucial\n- Bring this analysis to your appointment")
+                st.error(f"**⚠️ URGENT: This lesion shows characteristics of {CLASS_INFO[top_class]['full_name']}**\n\n**Recommended Actions:**\n- Schedule an appointment with a **dermatologist immediately**\n- Do not delay - early detection is crucial\n- Bring this analysis to your appointment\n- Avoid sun exposure until evaluated")
             elif risk_level == 'Medium':
-                st.warning(f"**⚡ This lesion shows characteristics of {CLASS_INFO[top_class]['full_name']}**\n\n**Recommended Actions:**\n- Schedule a dermatologist appointment within **1-2 weeks**\n- Monitor for any changes in size, color, or shape")
+                st.warning(f"**⚡ This lesion shows characteristics of {CLASS_INFO[top_class]['full_name']}**\n\n**Recommended Actions:**\n- Schedule a dermatologist appointment within **1-2 weeks**\n- Monitor for any changes in size, color, or shape\n- Protect from sun exposure")
             else:
-                st.info(f"**✓ This lesion appears to be {CLASS_INFO[top_class]['full_name']}**\n\n**Recommended Actions:**\n- Continue regular skin monitoring\n- Annual dermatology check-ups recommended")
+                st.info(f"**✓ This lesion appears to be {CLASS_INFO[top_class]['full_name']}**\n\n**Recommended Actions:**\n- Continue regular skin monitoring\n- Annual dermatology check-ups recommended\n- Report any changes to your doctor\n- Practice sun safety")
 
             st.subheader("🔍 Top 3 Predictions")
             top3 = np.argsort(probs)[::-1][:3]
@@ -336,7 +374,7 @@ def main():
         except Exception as e:
             st.error(f"⚠️ An error occurred while processing the image: {e}")
     else:
-        st.info("👆 **Please upload a dermoscopic image to begin analysis**\n\n**Tips for best results:** Use high-quality dermoscopic images with good lighting and focus.")
+        st.info("👆 **Please upload a dermoscopic image to begin analysis**\n\n**Tips for best results:** Use high-quality dermoscopic images with good lighting and focus. Not validated for subungal or mucousal lesions.")
 
     st.subheader("📸 What is a dermoscopic image?")
     st.markdown("Dermoscopic images are captured using a **dermatoscope**, a specialized tool that uses magnification and polarized light to examine skin patterns beneath the surface, enabling more accurate diagnoses.")
