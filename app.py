@@ -265,13 +265,6 @@ def main():
     with st.sidebar:
         st.header("ℹ️ Information")
         st.markdown("This AI model classifies medical dermoscopic images of skin lesions into **8 categories**.")
-        st.subheader("Classification Categories")
-        st.markdown("""
-        - **Critical/High Risk:** Melanoma, BCC, SCC
-        - **Medium Risk:** Actinic Keratosis
-        - **Low Risk:** Naevus, Benign Keratosis, Dermatofibroma, Vascular
-        """)
-        st.divider()
         st.header("⚙️ Settings")
         use_tta = st.checkbox("Use Test-Time Augmentation", value=True)
         show_all_probabilities = st.checkbox("Show detailed probability chart", value=True)
