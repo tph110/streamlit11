@@ -263,7 +263,7 @@ def main():
 
             with col1:
                 st.subheader("Uploaded Image")
-                st.image(image, use_column_width=True)
+                st.image(image, use_container_width=True)
                 st.caption(f"Image size: {image.size[0]} x {image.size[1]} pixels")
 
                 # ✅ Grad-CAM: Only if enabled (and after image is loaded)
