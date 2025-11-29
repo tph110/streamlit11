@@ -52,7 +52,7 @@ def set_theme(background_color='#0E1117'):
     [data-testid="stSidebar"] {{ background-color: rgba(30, 30, 30, 0.95); color: #F0F2F6; }}
     hr {{ border-top: 1px solid #333; }}
 
-    /* Professional Heatmap Reveal Animation */
+    /* Professional Heatmap Reveal Animation (Fixed) */
     .gradcam-container {{
         position: relative;
         margin-top: 1.5rem;
@@ -64,19 +64,25 @@ def set_theme(background_color='#0E1117'):
         width: 100%;
         height: 100%;
         pointer-events: none;
+        opacity: 0;
+        animation: gradcamFadeIn 0.3s ease-in 2.5s forwards;
     }}
-    .gradcam-reveal {{
+    .gradcam-reveal-mask {{
+        position: absolute;
+        top: 0;
+        left: 0;
         width: 100%;
         height: 100%;
-        background: linear-gradient(90deg, 
-            transparent 0%, 
-            rgba(255, 255, 255, 0.15) 50%, 
-            transparent 100%);
-        animation: gradcamReveal 2.2s ease-in-out 0.8s forwards;
+        background: rgba(255, 255, 255, 0.12);
+        clip-path: polygon(0% 0%, 0% 100%, 0% 100%, 0% 0%);
+        animation: gradcamReveal 2.2s ease-in-out 0.3s forwards;
     }}
     @keyframes gradcamReveal {{
-        0% {{ transform: translateX(-100%); }}
-        100% {{ transform: translateX(100%); }}
+        0% {{ clip-path: polygon(0% 0%, 0% 100%, 0% 100%, 0% 0%); }}
+        100% {{ clip-path: polygon(0% 0%, 100% 0%, 100% 100%, 0% 100%); }}
+    }}
+    @keyframes gradcamFadeIn {{
+        to {{ opacity: 1; }}
     }}
     .gradcam-caption {{
         text-align: center;
@@ -88,7 +94,7 @@ def set_theme(background_color='#0E1117'):
     </style>
     """
     st.markdown(css, unsafe_allow_html=True)
-
+    
 # -------------------------
 # Model Loading
 # -------------------------
