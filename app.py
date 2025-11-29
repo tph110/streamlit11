@@ -274,7 +274,7 @@ def main():
                         top_idx = np.argmax(predict_with_tta(model, tensor, use_tta=False))
                         gradcam_img = generate_gradcam_lite(model, tensor, top_idx)
                         if gradcam_img:
-                            st.image(gradcam_img, caption="AI Focus: Regions most influential for diagnosis", use_column_width=True)
+                            st.image(gradcam_img, caption="AI Image Analysis", use_container_width=True)
                         else:
                             st.info("AI attention map unavailable for this image.")
                     st.markdown('</div>', unsafe_allow_html=True)
