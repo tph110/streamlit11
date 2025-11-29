@@ -319,7 +319,7 @@ def main():
                                 <div class="gradcam-reveal"></div>
                             </div>
                             <div class="gradcam-caption">
-                                AI focus: Regions most influential for diagnosis
+                                AI Heatmap Imaging
                             </div>
                         </div>
                         """, unsafe_allow_html=True)
